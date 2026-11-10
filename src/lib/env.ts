@@ -1,8 +1,10 @@
 import z from "zod";
 
 const envSchema = z.object({
-  PORT: z.coerce.number().int().min(1024),
+  NODE_ENV: z.enum(["development","production"]),
+  PORT: z.coerce.number().int(),
   ALPHABETS: z.string(),
+  DB_URL: z.string(),
 });
 
 const env = envSchema.parse(process.env);
