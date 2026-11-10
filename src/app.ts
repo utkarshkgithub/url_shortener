@@ -1,6 +1,8 @@
 import express from "express";
-import {createUrl,decodeUrl} from "./createUrl/createUrl.controller.js"
+import {createUrl} from "./createUrl/createUrl.controller.js"
+
 import { errorMiddleware } from "./middleware/error.middleware.js";
+import { decodeUrl } from "./decodeUrl/decodeUrl.controller.js";
 
 const app = express();
 
