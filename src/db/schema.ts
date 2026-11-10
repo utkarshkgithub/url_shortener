@@ -2,7 +2,6 @@ import { pgTable, integer, bigint, varchar, text, timestamp, index } from "drizz
 
 export const ticketCounter = pgTable("ticket_counter",{
     id: integer("id").primaryKey(),
-    start: integer("start").notNull(),
     end: integer("end").notNull(),
     current: integer("current").notNull(), 
 })
