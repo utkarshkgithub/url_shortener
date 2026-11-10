@@ -6,17 +6,12 @@ import { and, eq, lt, sql } from "drizzle-orm";
 import { AppError } from "../middleware/error.middleware.js";
 import { logger } from "../lib/logger.js";
 
-const urls: Map<number, string> = new Map();
-const ALPHABETS = env.ALPHABETS;
-// This is the custom encoding Scheme to '000011' -> 3rd index -> 'c'
-const mpDecode: Map<string, number> = new Map();
-let numRows = 10_000;
+export const urls: Map<number, string> = new Map();
 
+const ALPHABETS = env.ALPHABETS;
 const BASE = ALPHABETS.length;
 
-for (let i = 0; i < BASE; i++) {
-  mpDecode.set(ALPHABETS.charAt(i), i);
-}
+let numRows = 10_000;
 
 export async function createHash(url: string): Promise<string> {
   let numTries = 3;
@@ -63,19 +58,3 @@ async function fetchIndex(): Promise<number | undefined> {
   return result?.current;
 }
 
-export function decodeHash(url: string): string | undefined {
-  let decodedIndex = 0;
-  console.log(url);
-  for (let i = 0; i < url.length; i++) {
-    // console.log(url.charAt(i));
-    const val = mpDecode.get(url.charAt(i));
-    // console.log(val);
-    if (val === undefined) {
-      return;
-    }
-    decodedIndex *= BASE;
-    decodedIndex += val;
-  }
-
-  return urls.get(decodedIndex);
-}
