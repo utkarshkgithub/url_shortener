@@ -50,7 +50,7 @@ async function fetchIndex(): Promise<number | undefined> {
     })
     .where(
       and(
-        eq(ticketCounter.id, rowId),
+        eq(ticketCounter.ticketCounterId, rowId),
         lt(ticketCounter.current, ticketCounter.end),
       ),
     )
