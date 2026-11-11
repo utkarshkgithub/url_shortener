@@ -14,8 +14,8 @@ app.get("/", (req, res) => {
   });
 });
 
-app.post("/create", createUrl);
-app.post("/decode", decodeUrl);
+app.post("/u/create", createUrl);
+app.get("/:shortCode", decodeUrl);
 
 app.use(errorMiddleware);
 

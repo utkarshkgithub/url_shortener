@@ -1,4 +1,4 @@
-import { pgTable, integer, bigint, varchar, text, timestamp, index } from "drizzle-orm/pg-core"
+import { pgTable, integer, text, timestamp } from "drizzle-orm/pg-core"
 
 export const ticketCounter = pgTable("ticket_counter",{
     id: integer("id").primaryKey(),
@@ -7,8 +7,7 @@ export const ticketCounter = pgTable("ticket_counter",{
 })
 
 export const urls = pgTable("urls",{
-    id: integer("id").primaryKey(),
-    shortCode: varchar("short_code",{length: 10}).unique().notNull(),
+    codeId: integer("id").primaryKey(),
     originalUrl: text("original_url").notNull(),
     createdAt: timestamp("created_at", {withTimezone: true}).defaultNow().notNull(),
 })

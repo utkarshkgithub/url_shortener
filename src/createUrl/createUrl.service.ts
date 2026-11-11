@@ -1,12 +1,12 @@
 import env from "../lib/env.js";
 import { db } from "../db/database.js";
 import { randomInt } from "crypto";
-import { ticketCounter } from "../db/schema.js";
+import { ticketCounter, urls } from "../db/schema.js";
 import { and, eq, lt, sql } from "drizzle-orm";
 import { AppError } from "../middleware/error.middleware.js";
 import { logger } from "../lib/logger.js";
 
-export const urls: Map<number, string> = new Map();
+// export const urls: Map<number, string> = new Map();
 
 const ALPHABETS = env.ALPHABETS;
 const BASE = ALPHABETS.length;
@@ -34,7 +34,10 @@ export async function createHash(url: string): Promise<string> {
 
   encodedHash = encodedHash.padStart(3,ALPHABETS.charAt(0))
 
-  urls.set(index, url);
+  await db
+    .insert(urls)
+    .values({codeId:index,originalUrl:url})
+    
   return encodedHash;
 }
 
