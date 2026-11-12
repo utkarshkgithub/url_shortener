@@ -3,6 +3,7 @@ import { Pool } from "pg"
 import {drizzle} from "drizzle-orm/node-postgres"
 import * as schema from "./schema.js"
 import env from "../lib/env.js"
+import { logger } from "../lib/logger.js"
 
 export const pool = new Pool({
     connectionString: env.DB_URL,
@@ -18,4 +19,14 @@ export const db = drizzle(pool, {schema})
 
 export async function closeDatabase() {
     await pool.end();
+}
+
+export async function checkDatabaseHealth() {
+    try {
+        await pool.query("SELECT 1");
+        return true;
+    } catch (err){
+        logger.error(err,"Database connection Failed");
+        return false;
+    }
 }
