@@ -5,6 +5,7 @@ const envSchema = z.object({
   PORT: z.coerce.number().int(),
   ALPHABETS: z.string(),
   DB_URL: z.url(),
+  DB_SSL: z.stringbool().optional().default(false),
   REDIS_USERNAME: z.string(),
   REDIS_PASSWORD: z.string(),
   REDIS_HOST: z.string(),

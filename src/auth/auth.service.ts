@@ -6,7 +6,7 @@ import { logger } from "../lib/logger.js";
 import { eq } from "drizzle-orm";
 import { AppError } from "../middleware/error.middleware.js";
 
-export async function login(rawUser: LoginUserType) : Promise<UserDataType> {
+export async function login(rawUser: LoginUserType): Promise<UserDataType> {
   const [userRow] = await db
     .select()
     .from(users)
@@ -14,7 +14,7 @@ export async function login(rawUser: LoginUserType) : Promise<UserDataType> {
   if (userRow === undefined) {
     throw new AppError(401, "Email not found");
   }
-  const {passwordHash,...userRecord }= userRow;
+  const { passwordHash, ...userRecord } = userRow;
   const valid = await verifyPassword(rawUser.password, passwordHash);
   if (!valid) {
     throw new AppError(401, "Invalid email or password");
@@ -30,16 +30,20 @@ export async function signup(user: NewUserType): Promise<UserDataType> {
       email: user.email,
       passwordHash,
     };
-    const [inserted] = await db
-      .insert(users)
-      .values(newUserRecord)
-      .returning();
+    const [inserted] = await db.insert(users).values(newUserRecord).returning();
 
     if (!inserted) {
       throw new AppError(500, "Insert returned no row");
     }
-    return inserted;
+    return {
+      userId: inserted.userId,
+      name: inserted.name,
+      email: inserted.email,
+    };
   } catch (err: any) {
+    if (err?.cause?.code === "23505") {
+      throw new AppError(409, "Email already exists");
+    }
     logger.error(err);
     throw err;
   }

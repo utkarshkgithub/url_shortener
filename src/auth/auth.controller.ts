@@ -19,7 +19,7 @@ export async function login(req: Request, res: Response) {
   const user = await authService.login(parsedUser);
   const sessionCode = generateSessionCode();
   await addToRedis(sessionCode, JSON.stringify(user));
-  return res.cookie("sessionId", sessionCode).status(201).json(user);
+  return res.cookie("sessionId", sessionCode).status(200).json(user);
 }
 
 export async function logout(req: Request, res: Response) {
