@@ -5,6 +5,7 @@ import { ticketCounter, urls } from "../db/schema.js";
 import { and, eq, lt, sql } from "drizzle-orm";
 import { AppError } from "../middleware/error.middleware.js";
 import { logger } from "../lib/logger.js";
+import type { UserDataType } from "../auth/auth.types.js";
 
 // export const urls: Map<number, string> = new Map();
 
@@ -13,14 +14,17 @@ const BASE = ALPHABETS.length;
 
 let numRows = 10_000;
 
-export async function createHash(url: string): Promise<string> {
+export async function createHash(
+  url: string,
+  user: UserDataType,
+): Promise<string> {
   let numTries = 3;
   let index: undefined | number;
-  while (index===undefined && numTries>0) {
+  while (index === undefined && numTries > 0) {
     numTries--;
     index = await fetchIndex();
   }
-  if (index===undefined) {
+  if (index === undefined) {
     logger.error("Range Intervals Exhausted");
     throw new AppError(500, "Range Intervals Exhausted");
   }
@@ -32,17 +36,17 @@ export async function createHash(url: string): Promise<string> {
     num = Math.floor(num / BASE);
   }
 
-  encodedHash = encodedHash.padStart(3,ALPHABETS.charAt(0))
+  encodedHash = encodedHash.padStart(3, ALPHABETS.charAt(0));
 
   await db
     .insert(urls)
-    .values({codeId:index,originalUrl:url})
-    
+    .values({codeId: index, originalUrl: url,userId:user.userId });
+
   return encodedHash;
 }
 
 async function fetchIndex(): Promise<number | undefined> {
-  const rowId = randomInt(1,numRows+1);
+  const rowId = randomInt(1, numRows + 1);
   let [result] = await db
     .update(ticketCounter)
     .set({
@@ -60,4 +64,3 @@ async function fetchIndex(): Promise<number | undefined> {
 
   return result?.current;
 }
-

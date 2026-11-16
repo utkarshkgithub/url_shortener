@@ -24,9 +24,10 @@ export async function closeDatabase() {
 export async function checkDatabaseHealth() {
     try {
         await pool.query("SELECT 1");
+        logger.info("Database health check success");
         return true;
     } catch (err){
-        logger.error(err,"Database connection Failed");
+        logger.error(err,"Database health check Failed");
         return false;
     }
 }

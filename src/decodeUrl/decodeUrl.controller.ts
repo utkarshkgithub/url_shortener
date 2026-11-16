@@ -1,5 +1,6 @@
 import type { Request, Response } from "express";
 import { decodeHash } from "./decodeUrl.service.js";
+import { logger } from "../lib/logger.js";
 
 export async function decodeUrl(
   req: Request<{shortCode:string}>, 
@@ -16,7 +17,7 @@ export async function decodeUrl(
         error:"requested url does not exist"
     });
   }
-  
+  logger.info(req);
   return res.redirect(301,decodeUrl);
 }
 
