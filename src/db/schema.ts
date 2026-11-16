@@ -28,7 +28,7 @@ export const urls = pgTable(
     createdAt: timestamp("created_at", { withTimezone: true })
       .defaultNow()
       .notNull(),
-    userId: integer("user_id").references(() => users.userId),
+    userId: integer("user_id").references(() => users.userId).notNull(),
   },
   (t) => [index("urls_user_id_idx").on(t.userId)],
 );
